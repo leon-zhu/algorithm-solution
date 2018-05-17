@@ -17,6 +17,7 @@ public class BinaryTreeTest {
     public static void main(String[] args) {
 
         Integer[] input = {1, 2, 4, null, null, 5, null, null, 3, 6, null, null, 7, null, null}; //先序顺序
+        //Integer[] input = {1, 2, 4, 5, 3, 6, 7}; //不对
         LinkedList<Integer> list = new LinkedList<>(Arrays.asList(input));
         BinaryTree<Integer> binaryTree = new BinaryTree<>();
         TreeNode<Integer> root = binaryTree.createBinaryTreeUsingPreOrder(list);
@@ -30,6 +31,14 @@ public class BinaryTreeTest {
         //迭代
         out.print("\n先序-迭代: ");
         binaryTree.preOrderIteration(root);
+        out.print("\n中序-迭代: ");
+        binaryTree.inOrderIteration(root);
+        out.print("\n后序-迭代: ");
+        binaryTree.postOrderIteration(root);
+        out.print("\n层序1: ");
+        binaryTree.levelOrder1(root);
+        out.print("\n层序2: \n");
+        binaryTree.levelOrder2(root);
 
 
     }
