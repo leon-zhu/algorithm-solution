@@ -1,6 +1,5 @@
 package BinarySearchTree;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
@@ -34,6 +33,7 @@ public class BST<Key extends Comparable<Key>, Value> {
     public int size() {
         return size(root);
     }
+
     private int size(Node x) {
         if (x == null)  return 0;
         else            return x.N;
@@ -43,6 +43,7 @@ public class BST<Key extends Comparable<Key>, Value> {
     public Value get(Key key) {
         return get(root, key);
     }
+
     /*从BST的root节点, 开始查找节点key所对应的value值*/
     private Value get(Node root, Key key) {
         if (root == null) return null;
@@ -51,7 +52,6 @@ public class BST<Key extends Comparable<Key>, Value> {
         else if (cmp < 0) return get(root.left, key);
         else return root.val;
     }
-
 
     /*向BST中插入一个节点(key, val), 如果存在key, 那么则执行更新*/
     public void put(Key key, Value val) {
@@ -63,7 +63,7 @@ public class BST<Key extends Comparable<Key>, Value> {
         if (cmp > 0) root.right = put(root.right, key, val);
         else if (cmp < 0) root.left = put(root.left, key, val);
         else root.val = val; //覆盖
-        root.N = size(root.left) + size(root.right) + 1; //有些疑惑
+        root.N = size(root.left) + size(root.right) + 1; //典型的回溯法应用
         return root;
     }
 
@@ -104,6 +104,7 @@ public class BST<Key extends Comparable<Key>, Value> {
     public void delMin() {
         root = delMin(root);
     }
+
     private Node delMin(Node root) {
         if (root.left == null) return root.right;
         root.left = delMin(root.left);
@@ -122,15 +123,17 @@ public class BST<Key extends Comparable<Key>, Value> {
         else if (cmp > 0) root.right = delete(root.right, key);
         else {
             //找到要删除的元素
+            //情况1：要删除的节点左右节点不同时存在
             if (root.right == null) return root.left;
             if (root.left == null) return root.right;
             //以下四句话要好好理解
+            //情况2：左右节点同时存在, 那么将右子树的最小节点替换为当前节点
             Node t = root;
             root = min(t.right);
             root.right = delMin(t.right);
             root.left = t.left;
         }
-        root.N = size(root.left) + size(root.right) + 1;
+        root.N = size(root.left) + size(root.right) + 1; //回溯保持各个节点内的N不变
         return root;
     }
 
@@ -144,18 +147,30 @@ public class BST<Key extends Comparable<Key>, Value> {
         }
         return queue;
     }
+
     private void keys(Node root, Queue<Key> queue, Key lo, Key hi) {
         if (root == null) return;
         int lval = lo.compareTo(root.key);
         int rval = hi.compareTo(root.key);
-        if (lval < 0) keys(root.left, queue, lo, hi);
+        if (lval < 0) keys(root.left, queue, lo, hi); //找到左边界
         if (lval <= 0 && rval >= 0) queue.offer(root.key);
-        if (rval > 0) keys(root.right, queue, lo, hi);
+        if (rval > 0) keys(root.right, queue, lo, hi); //找到右边界
     }
 
 
     public static void main(String[] args) {
+
+
         BST<Integer, Object> bst = new BST<>();
+        Random rand = new Random();
+        for (int i = 0; i < 10; i++) {
+            int num = rand.nextInt(10);
+            System.out.println(num);
+            bst.put(num, "aa");
+        }
+        bst.keys(bst.root, 2, 5);
+
+        /*BST<Integer, Object> bst = new BST<>();
         Random rand = new Random();
         for (int i = 0; i < 10; i++) {
             bst.put(rand.nextInt(10), i*i);
@@ -169,7 +184,7 @@ public class BST<Key extends Comparable<Key>, Value> {
         System.out.println("\n删除某元素后");
         bst.inOrder(bst.root);
 
-        bst.keys(bst.root, 0, 100);
+        bst.keys(bst.root, 0, 100);*/
 
     }
 
